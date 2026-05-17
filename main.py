@@ -1,37 +1,3 @@
-# =================================================================
-#  TOOL WEAR FAILURE PREDICTION — VS CODE PIPELINE
-#  Type H Filtered | AI4I 2020 Predictive Maintenance Dataset
-#  Author : [Your Full Name]
-#  Subject: [Your Subject/Course]
-# =================================================================
-#
-#  HOW TO SET UP (do these steps ONCE):
-#  ─────────────────────────────────────
-#  STEP 1 — Install Python
-#    Download from: https://www.python.org/downloads/
-#    During install, CHECK the box: "Add Python to PATH"
-#
-#  STEP 2 — Open VS Code Terminal
-#    In VS Code: View > Terminal   (or press Ctrl + backtick `)
-#
-#  STEP 3 — Install all libraries (paste this into the terminal):
-#
-#      pip install pandas numpy matplotlib seaborn scikit-learn imbalanced-learn
-#
-#  STEP 4 — Download the dataset
-#    Go to:  https://archive.ics.uci.edu/dataset/601
-#    Click Download, extract the zip file
-#    Rename the CSV file to:   ai4i2020.csv
-#    Place it in the SAME folder as this  main.py  file
-#
-#  STEP 5 — Run this script
-#    In the VS Code terminal type:   python main.py
-#
-#  OUTPUT:
-#    - All 5 tables printed in the terminal
-#    - All 7 figures saved inside a folder called  outputs/
-# =================================================================
-
 
 # ─────────────────────────────────────────────────────────────────
 #  IMPORT LIBRARIES
@@ -60,16 +26,12 @@ from sklearn.metrics         import (
 )
 from imblearn.over_sampling  import SMOTE
 
-
-# ─────────────────────────────────────────────────────────────────
 #  CREATE OUTPUT FOLDER
-# ─────────────────────────────────────────────────────────────────
+
 os.makedirs('outputs', exist_ok=True)
 
-
-# ─────────────────────────────────────────────────────────────────
 #  GLOBAL FIGURE STYLE
-# ─────────────────────────────────────────────────────────────────
+
 plt.rcParams.update({
     'font.family'       : 'serif',
     'font.size'         : 11,
@@ -94,9 +56,8 @@ print("  Type H Filtered | AI4I 2020 Predictive Maintenance Dataset")
 print("=" * 65)
 
 
-# =================================================================
 #  STEP 1 — LOAD DATASET
-# =================================================================
+
 
 CSV_PATH = 'ai4i2020.csv'
 
@@ -116,9 +77,7 @@ df = pd.read_csv(CSV_PATH)
 print(f"\n  Dataset loaded: {df.shape[0]:,} rows x {df.shape[1]} columns")
 
 
-# =================================================================
 #  STEP 2 — TYPE H FILTER
-# =================================================================
 
 df_h = df[df['Type'] == 'H'].reset_index(drop=True)
 
@@ -134,36 +93,27 @@ X = df_h[FEATURES]
 y = df_h['TWF']
 
 
-# =================================================================
 #  STEP 3 — TRAIN-TEST SPLIT  (80/20, stratified)
-# =================================================================
 
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.20, random_state=42, stratify=y
 )
 
-
-# =================================================================
 #  STEP 4 — STANDARD SCALING
-#  Fit only on training set. Apply same scale to test set.
-# =================================================================
 
 scaler     = StandardScaler()
 X_train_sc = scaler.fit_transform(X_train)
 X_test_sc  = scaler.transform(X_test)
 
 
-# =================================================================
 #  STEP 5 — SMOTE  (applied to training set only)
-# =================================================================
+
 
 smote = SMOTE(random_state=42)
 X_train_sm, y_train_sm = smote.fit_resample(X_train_sc, y_train)
 
-
-# =================================================================
 #  STEP 6 — TRAIN ALL FOUR MODELS
-# =================================================================
+
 
 models = {
     'Logistic Regression' : LogisticRegression(
@@ -208,22 +158,10 @@ importances = pd.Series(
 print("\n  All models trained.\n")
 
 
-# #################################################################
 #  TABLES
-#  Read values from the terminal and type them into your Word doc.
-# #################################################################
 
 
-# -----------------------------------------------------------------
 #  TABLE I
-#  WHERE TO PUT IT:
-#    Section III — METHODOLOGY
-#    Subsection B — Dataset Acquisition and Type H Filtering
-#    Place it AFTER the 2nd paragraph of Section III-B.
-#    That paragraph ends with:
-#    "...Table I summarizes the dataset structure before and
-#     after the Type H filtering step."
-# -----------------------------------------------------------------
 
 print("=" * 65)
 print("  TABLE I — Dataset Summary Before and After Type H Filtering")
@@ -260,19 +198,7 @@ table_I = pd.DataFrame({
 print(table_I.to_string(index=False))
 print()
 
-
-# -----------------------------------------------------------------
 #  TABLE II
-#  WHERE TO PUT IT:
-#    Section III — METHODOLOGY
-#    Subsection C — Data Preprocessing
-#    Place it AFTER the 1st paragraph of Section III-C.
-#    That paragraph ends with:
-#    "...Table II presents the descriptive statistics of the
-#     filtered dataset, confirming that all features fall within
-#     physically plausible operating ranges consistent with
-#     industrial CNC milling conditions."
-# -----------------------------------------------------------------
 
 print("=" * 65)
 print("  TABLE II — Descriptive Statistics  (Type H Filtered,  n = 961)")
@@ -293,21 +219,7 @@ desc.columns = [
 print(desc.to_string())
 print()
 
-
-# -----------------------------------------------------------------
 #  TABLE III
-#  WHERE TO PUT IT:
-#    Section IV — RESULTS AND DISCUSSION
-#    Subsection C — Model Performance Comparison
-#    Place it AFTER the 1st paragraph of Section IV-C.
-#    That paragraph ends with:
-#    "...The more diagnostic metrics — precision, recall,
-#     F1-score, and AUC-ROC — reveal meaningful performance
-#     differentiation across models. The highlighted row
-#     indicates the best-performing model."
-#
-#  NOTE: Shade/highlight the Random Forest row in your Word table.
-# -----------------------------------------------------------------
 
 print("=" * 65)
 print("  TABLE III — Comparison of Model Performance for TWF Prediction")
@@ -326,18 +238,7 @@ print(results_df.to_string())
 print()
 
 
-# -----------------------------------------------------------------
 #  TABLE IV
-#  WHERE TO PUT IT:
-#    Section IV — RESULTS AND DISCUSSION
-#    Subsection D — Confusion Matrix Analysis
-#    Place it AFTER the 1st paragraph of Section IV-D.
-#    That paragraph ends with:
-#    "...Table IV presents the confusion matrices for all four
-#     models, providing a detailed view of per-class
-#     classification behavior on the 193-observation test set
-#     comprising 178 non-failure and 15 failure instances."
-# -----------------------------------------------------------------
 
 print("=" * 65)
 print("  TABLE IV — Confusion Matrices for All Models")
@@ -363,19 +264,7 @@ print(pd.DataFrame(cm_rows).to_string(index=False))
 print()
 
 
-# -----------------------------------------------------------------
 #  TABLE V
-#  WHERE TO PUT IT:
-#    Section IV — RESULTS AND DISCUSSION
-#    Subsection E — Feature Importance Analysis
-#    Place it AFTER the 1st paragraph of Section IV-E.
-#    That paragraph ends with:
-#    "...Table V presents the resulting importance scores,
-#     ranked from most to least influential."
-#
-#  NOTE: Shade/highlight the Tool wear [min] row — it is
-#        the dominant feature (81.70% importance).
-# -----------------------------------------------------------------
 
 print("=" * 65)
 print("  TABLE V — Feature Importance Scores  (Random Forest)")
@@ -395,26 +284,9 @@ print(fi_df.to_string(index=False))
 print()
 
 
-# #################################################################
 #  FIGURES
-#  All saved to the  outputs/  folder.
-#  Read each placement comment to know exactly where to insert
-#  each figure in your Word document.
-# #################################################################
 
-
-# -----------------------------------------------------------------
 #  FIGURE 1 — Class Distribution Before and After SMOTE
-#
-#  PLACE IN PAPER:
-#    Section III — METHODOLOGY
-#    Subsection D — Class Imbalance Mitigation Using SMOTE
-#    Place AFTER the only paragraph in Section III-D.
-#    That paragraph ends with:
-#    "...SMOTE's synthetic augmentation is essential for
-#     providing sufficient minority-class signal to train
-#     reliable failure detection models."
-# -----------------------------------------------------------------
 
 fig, axes = plt.subplots(1, 2, figsize=(10, 4.5))
 fig.suptitle(
@@ -471,16 +343,7 @@ print("  Paragraph ends: '...reliable failure detection models.'")
 print()
 
 
-# -----------------------------------------------------------------
 #  FIGURE 2 — Feature Correlation Heatmap
-#
-#  PLACE IN PAPER:
-#    Section III — METHODOLOGY
-#    Subsection B — Dataset Acquisition and Type H Filtering
-#    Place AFTER TABLE I in Section III-B.
-#    Order in that subsection:
-#    paragraph 1 → paragraph 2 → TABLE I → FIGURE 2
-# -----------------------------------------------------------------
 
 fig, ax = plt.subplots(figsize=(8, 6))
 
@@ -519,20 +382,7 @@ print("  Section III-B  |  After TABLE I")
 print("  Order: paragraph 1 → paragraph 2 → TABLE I → FIGURE 2")
 print()
 
-
-# -----------------------------------------------------------------
 #  FIGURE 3 — Tool Wear Distribution by TWF Label
-#
-#  PLACE IN PAPER:
-#    Section IV — RESULTS AND DISCUSSION
-#    Subsection A — Filtered Dataset Characterization
-#    Place AFTER the 2nd paragraph of Section IV-A.
-#    That paragraph ends with:
-#    "...These distributions confirm that the filtered dataset
-#     captures the full operational range of Type H machine
-#     behavior, providing a representative basis for failure
-#     prediction model training."
-# -----------------------------------------------------------------
 
 no_fail_tw = df_h[df_h['TWF']==0]['Tool wear [min]']
 fail_tw    = df_h[df_h['TWF']==1]['Tool wear [min]']
@@ -573,21 +423,7 @@ print("  for failure prediction model training.'")
 print()
 
 
-# -----------------------------------------------------------------
 #  FIGURE 4 — Confusion Matrices (2x2 grid, one per model)
-#
-#  PLACE IN PAPER:
-#    Section IV — RESULTS AND DISCUSSION
-#    Subsection D — Confusion Matrix Analysis
-#    Place AFTER the 2nd paragraph of Section IV-D.
-#    That paragraph ends with:
-#    "...However, Random Forest's superior F1-score and
-#     AUC-ROC establish it as the most balanced and reliable
-#     classifier for the overall failure detection task."
-#
-#    Full order inside Section IV-D:
-#    paragraph 1 → TABLE IV → paragraph 2 → FIGURE 4
-# -----------------------------------------------------------------
 
 fig, axes = plt.subplots(2, 2, figsize=(11, 9))
 fig.suptitle(
@@ -630,18 +466,7 @@ print("  for the overall failure detection task.'")
 print()
 
 
-# -----------------------------------------------------------------
 #  FIGURE 5 — ROC Curves (all 4 models overlaid)
-#
-#  PLACE IN PAPER:
-#    Section IV — RESULTS AND DISCUSSION
-#    Subsection C — Model Performance Comparison
-#    Place AFTER FIGURE 7 in Section IV-C.
-#
-#    Full order inside Section IV-C:
-#    paragraph 1 → TABLE III → paragraph 2 → paragraph 3
-#    → FIGURE 7 → FIGURE 5
-# -----------------------------------------------------------------
 
 fig, ax = plt.subplots(figsize=(8, 6))
 
@@ -677,24 +502,7 @@ print("              → FIGURE 7 → FIGURE 5")
 print()
 
 
-# -----------------------------------------------------------------
 #  FIGURE 6 — Feature Importance Horizontal Bar Chart
-#
-#  PLACE IN PAPER:
-#    Section IV — RESULTS AND DISCUSSION
-#    Subsection E — Feature Importance Analysis
-#    Place AFTER the 2nd paragraph of Section IV-E.
-#    That paragraph ends with:
-#    "...validating the engineering intuition underlying
-#     time-based tool replacement practices while simultaneously
-#     demonstrating that a data-driven model can identify the
-#     specific failure-risk threshold within this feature with
-#     substantially greater precision than fixed-interval
-#     replacement schedules."
-#
-#    Full order inside Section IV-E:
-#    paragraph 1 → TABLE V → paragraph 2 → FIGURE 6
-# -----------------------------------------------------------------
 
 imp_sorted = importances.sort_values(ascending=True)
 bar_colors = [RED if v == imp_sorted.max() else BLUE
@@ -737,22 +545,7 @@ print("  replacement schedules.'")
 print()
 
 
-# -----------------------------------------------------------------
 #  FIGURE 7 — Multi-Metric Model Comparison Bar Chart
-#
-#  PLACE IN PAPER:
-#    Section IV — RESULTS AND DISCUSSION
-#    Subsection C — Model Performance Comparison
-#    Place AFTER the 3rd paragraph of Section IV-C.
-#    That paragraph ends with:
-#    "...The near-identical performance of SVC and MLP on this
-#     structured tabular dataset is consistent with findings
-#     in recent comparative literature [10]."
-#
-#    Full order inside Section IV-C:
-#    paragraph 1 → TABLE III → paragraph 2 → paragraph 3
-#    → FIGURE 7 → FIGURE 5
-# -----------------------------------------------------------------
 
 metrics     = ['Accuracy','Precision','Recall','F1-Score','AUC-ROC']
 model_names = list(results.keys())
@@ -801,9 +594,7 @@ print("  comparative literature [10].'")
 print()
 
 
-# =================================================================
 #  FINAL PLACEMENT GUIDE
-# =================================================================
 
 print()
 print("=" * 65)
