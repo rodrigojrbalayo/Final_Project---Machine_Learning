@@ -1,4 +1,4 @@
-## 🧠 Project Architecture & Methodology
+Project Architecture & Methodology
 
 This project provides a targeted, data-driven framework for predicting Tool Wear Failure (TWF) specifically inside high-precision industrial milling environments. By utilizing a subset-isolated machine learning pipeline on the AI4I 2020 Predictive Maintenance Dataset, the models specialize in high-quality manufacturing constraints where tighter dimensional tolerances make degradation critical.
 
