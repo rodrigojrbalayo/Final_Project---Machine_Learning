@@ -11,7 +11,7 @@ The repository's code steps sequentially through the following experimental stag
 4. Classifier Evaluation: Benchmarks four separate structural architectures on precision, recall, F1-score, and AUC-ROC curves.
 
 Performance Summary
-The pipeline scripts output the following test-set performance metrics[cite: 600]:
+The pipeline scripts output the following test-set performance metrics:
 
 | Classifier | Accuracy | Precision | Recall | F1-Score | AUC-ROC |
 | :--- | :---: | :---: | :---: | :---: | :---: |
